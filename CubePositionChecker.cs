@@ -25,7 +25,7 @@ public class CubePositionChecker : MonoBehaviour
         {
             if (disableCoroutine != null)
             {
-                StopCoroutine(disableCoroutine); // Eðer bir coroutine çalýþýyorsa, durdur.
+                StopCoroutine(disableCoroutine);
                 disableCoroutine = null;
             }
 
@@ -34,7 +34,7 @@ public class CubePositionChecker : MonoBehaviour
         }
         else
         {
-            if (disableCoroutine == null) // Eðer coroutine baþlamamýþsa baþlat.
+            if (disableCoroutine == null)
             {
                 disableCoroutine = StartCoroutine(DisableAfterDelay());
             }
@@ -45,7 +45,7 @@ public class CubePositionChecker : MonoBehaviour
 
     private IEnumerator DisableAfterDelay()
     {
-        yield return new WaitForSeconds(0.5f); // 1 saniye bekle.
+        yield return new WaitForSeconds(0.5f);
         targetObject.SetActive(false);
     }
 
