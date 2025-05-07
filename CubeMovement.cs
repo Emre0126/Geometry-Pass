@@ -20,7 +20,7 @@ public class CubeMovement : MonoBehaviour
     private bool yPositionFrozen = false;
     public AudioSource moveAudioSource;
     private HashSet<Vector2> topPositions = new HashSet<Vector2>();
-    private Vector2 lastTopPosition; // Son top tagli nesnenin pozisyonu
+    private Vector2 lastTopPosition;
     private bool isRestarting = false;
     private bool hasMoveRequest = false;
     private bool canMove = true;
@@ -35,7 +35,7 @@ public class CubeMovement : MonoBehaviour
 
     private void Update()
     {
-        // 'top' etiketine sahip tüm aktif nesnelerin pozisyonlarýný güncelle
+        
         UpdateTopPositions();
 
         if (!isMoving && !GetComponent<Rigidbody>().isKinematic)
@@ -54,7 +54,7 @@ public class CubeMovement : MonoBehaviour
         }
         if (isMoving)
         {
-            // Hareketin geri kalan kýsmý
+            
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 new Vector3(targetPosition.x, transform.position.y, targetPosition.z),
@@ -80,39 +80,39 @@ public class CubeMovement : MonoBehaviour
                 transform.rotation = targetRotation;
                 SetFinalYPosition();
                 yPositionFrozen = false;
-                CheckKinematicStatus(); // Hareket tamamlandýktan sonra kontrol
+                CheckKinematicStatus();
             }
         }
     }
     private void AdjustCubeTowardsCopy()
     {
-        // Copy Cube'u bul
+        
         Transform copyCube = transform.Find("CopyCube");
         if (copyCube == null)
         {
-            Debug.Log("Copy Cube bulunamadý!");
+            Debug.Log("Copy Cube bulunamadÃ½!");
             return;
         }
 
-        // Copy Cube'ü silmeden önce pozisyonunu kaydet
+        
         Vector3 copyPosition = copyCube.position;
 
-        // Copy Cube'ü sil
+        
         Destroy(copyCube.gameObject);
 
-        // Orijinal Cube'ü Copy Cube'e doðru 1 birim yaklaþtýr
+        
         Vector3 directionToCopy = (copyPosition - transform.position).normalized;
         transform.position = Vector3.MoveTowards(transform.position, transform.position + directionToCopy, 1.0f);
 
-        // Sadece y ekseninde büyütme
+       
         transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y + 1.0f, transform.localScale.z);
 
-        // Yeni pozisyonu ve scale'i loglayýn (isteðe baðlý)
+        
         Debug.Log($"Orijinal Cube yeni pozisyonu: {transform.position}, yeni scale: {transform.localScale}");
     }
     private void AdjustTopColliders()
     {
-        if (!GetComponent<Rigidbody>().isKinematic) // Eðer isKinematic kapalýysa
+        if (!GetComponent<Rigidbody>().isKinematic)
         {
             GameObject[] topObjects = GameObject.FindGameObjectsWithTag("top");
             foreach (GameObject top in topObjects)
@@ -120,14 +120,14 @@ public class CubeMovement : MonoBehaviour
                 BoxCollider collider = top.GetComponent<BoxCollider>();
                 if (collider != null)
                 {
-                    // Collider'ýn boyutlarýný küçült
+                  
                     collider.size = new Vector3(
-                        Mathf.Max(0, (float)0.12, collider.size.x * 0.5f), // X ekseni boyutunu yarýya indir
-                        Mathf.Max(0, collider.size.y * 1f), // Y ekseni boyutunu yarýya indir
-                        Mathf.Max(0, (float)0.12, collider.size.z * 0.5f)  // Z ekseni boyutunu yarýya indir
+                        Mathf.Max(0, (float)0.12, collider.size.x * 0.5f), 
+                        Mathf.Max(0, collider.size.y * 1f), 
+                        Mathf.Max(0, (float)0.12, collider.size.z * 0.5f) 
                     );
 
-                    // Collider'ýn merkezini yeniden ayarla (opsiyonel)
+                   
 
                 }
             }
@@ -142,39 +142,39 @@ public class CubeMovement : MonoBehaviour
 
         foreach (GameObject top in tops)
         {
-            if (top.activeSelf) // Sadece aktif olanlarý kontrol et
+            if (top.activeSelf) 
             {
                 Vector2 position = new Vector2(Mathf.Round(top.transform.position.x), Mathf.Round(top.transform.position.z));
                 newTopPositions.Add(position);
 
-                // Check for any cube above this top that needs to fall
+                
                 HandleFallingCube(position, top);
             }
         }
 
-        // Remove any positions that are no longer active
+       
         foreach (var lastPosition in topPositions)
         {
             if (!newTopPositions.Contains(lastPosition))
             {
-                // Deactivated top object found, check if any cube above it needs to fall
+                
                 HandleFallingCube(lastPosition, null);
             }
         }
 
-        // Update the top positions list
+        
         topPositions = newTopPositions;
     }
 
     private void HandleFallingCube(Vector2 topPosition, GameObject topObject)
     {
-        // Check if there is a cube above the top object at the same position
+        
         GameObject cube = GetCubeAtPosition(topPosition);
 
         if (cube != null)
         {
-            // If the top object is deactivated, set the cube's Rigidbody to non-kinematic to make it fall
-            if (topObject == null || !topObject.activeSelf) // If top is deactivated
+            
+            if (topObject == null || !topObject.activeSelf)
             {
                 Rigidbody rb = cube.GetComponent<Rigidbody>();
                 if (rb != null && rb.isKinematic)
@@ -185,7 +185,7 @@ public class CubeMovement : MonoBehaviour
             }
             else
             {
-                // Ensure the cube is kinematic again when top object is active
+               
                 Rigidbody rb = cube.GetComponent<Rigidbody>();
                 if (rb != null && !rb.isKinematic)
                 {
@@ -198,8 +198,8 @@ public class CubeMovement : MonoBehaviour
 
     private GameObject GetCubeAtPosition(Vector2 position)
     {
-        // Find and return the cube located at the given position
-        GameObject[] cubes = GameObject.FindGameObjectsWithTag("Cube"); // Or the appropriate tag for your cubes
+        
+        GameObject[] cubes = GameObject.FindGameObjectsWithTag("Cube");
         foreach (var cube in cubes)
         {
             Vector2 cubePosition = new Vector2(Mathf.Round(cube.transform.position.x), Mathf.Round(cube.transform.position.z));
@@ -251,11 +251,11 @@ public class CubeMovement : MonoBehaviour
     {
         if (moveAudioSource != null)
         {
-            moveAudioSource.Play(); // Ses dosyasýný çal
+            moveAudioSource.Play(); 
         }
         else
         {
-            Debug.LogWarning("AudioSource atanmadý!");
+            Debug.LogWarning("AudioSource atanmadÃ½!");
         }
     }
     private void StartMovement(Vector3 direction, Vector3 rotationAxis)
@@ -268,7 +268,7 @@ public class CubeMovement : MonoBehaviour
 
         canMove = false;
         isMoving = true;
-        DisableButtons(); // Butonlarý pasif yap
+        DisableButtons();
         Invoke(nameof(ResetMoveLock), moveCooldown);
 
 
@@ -296,7 +296,7 @@ public class CubeMovement : MonoBehaviour
             yPositionFrozen = true;
         }
 
-        // Hareket baþlamadan önce son top pozisyonunu kaydet
+        
         lastTopPosition = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.z));
     }
     public bool CanMove
@@ -378,14 +378,14 @@ public class CubeMovement : MonoBehaviour
         {
             if (button != null)
             {
-                // Button'un renk bloklarýný al
+                
                 ColorBlock colorBlock = button.colors;
 
-                // Button'un normal ve disabled renklerini ayný yap
+                
                 colorBlock.disabledColor = colorBlock.normalColor;
                 button.colors = colorBlock;
 
-                // Butonu devre dýþý býrak
+                
                 button.interactable = false;
             }
         }
@@ -401,41 +401,31 @@ public class CubeMovement : MonoBehaviour
 
     private void RestartScene()
     {
-        if (isRestarting) return; // Eðer zaten resetleme baþladýysa, ikinci kez çalýþtýrma
-        if (PlayerPrefs.GetInt("GlobalRestartLock", 0) == 1) return; // Baþka biri baþlattýysa çýk
-        isRestarting = true; // Bu objede reset baþladý
+        if (isRestarting) return;
+        if (PlayerPrefs.GetInt("GlobalRestartLock", 0) == 1) return;
+        isRestarting = true;
         PlayerPrefs.SetInt("GlobalRestartLock", 1);
-        // Olasý sesleri durdur
+        
         if (moveAudioSource != null && moveAudioSource.isPlaying)
         {
             moveAudioSource.Stop();
         }
-
-        // Tüm hareketleri ve animasyonlarý sýfýrla
         StopAllCoroutines();
-
-        // Zamaný sýfýrla ve sahneyi yükle
-        
         int restartCount = PlayerPrefs.GetInt("RestartCount", 0);
         restartCount++;
-
-        int randomThreshold = UnityEngine.Random.Range(4, 6); // 4 ile 5 arasýnda (üst sýnýr dahil deðil)
-
+        int randomThreshold = UnityEngine.Random.Range(4, 6);
         if (restartCount >= randomThreshold)
         {
-            PlayerPrefs.SetInt("RestartCount", 0); // Sayacý sýfýrla
-            RequestAndShowInterstitialAd(); // Reklam göster
+            PlayerPrefs.SetInt("RestartCount", 0);
+            RequestAndShowInterstitialAd();
         }
         else
         {
-            // 6'ya ulaþýlmadýysa, sayacý kaydet ve normal reset iþlemini yap.
             PlayerPrefs.SetInt("RestartCount", restartCount);
             Time.timeScale = 1f;
             PlayerPrefs.SetInt("IsRestart", 1);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-
-
     }
     private void RequestAndShowInterstitialAd()
     {
@@ -447,7 +437,6 @@ public class CubeMovement : MonoBehaviour
             string adUnitId = "unexpected_platform";
 #endif
 
-        // Use the updated API that does not involve a local builder.
         InterstitialAd.Load(adUnitId, new AdRequest(), (InterstitialAd loadedAd, LoadAdError error) =>
         {
             if (error != null)
@@ -457,11 +446,7 @@ public class CubeMovement : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 return;
             }
-
-            // Store the loaded ad in our class-level field.
             currentInterstitialAd = loadedAd;
-
-            // Set up ad event handlers.
             currentInterstitialAd.OnAdFullScreenContentClosed += () =>
             {
                 PlayerPrefs.SetInt("IsRestart", 1);
@@ -472,13 +457,9 @@ public class CubeMovement : MonoBehaviour
                 PlayerPrefs.SetInt("IsRestart", 1);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             };
-
-            // Now wait 1 second and then show the interstitial.
             Invoke("ShowInterstitialAd", 0f);
         });
     }
-
-    // Class-level method that Invoke can locate.
     private void ShowInterstitialAd()
     {
         if (currentInterstitialAd != null)
@@ -582,26 +563,22 @@ public class CubeMovement : MonoBehaviour
     {
         List<GameObject> topObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("top"));
         Vector3 cubePosition = transform.position;
-
-        // Tüm top nesnelerini mesafelerine göre sýralayalým
         topObjects.Sort((a, b) =>
         {
             float distanceA = Vector3.Distance(cubePosition, a.transform.position);
             float distanceB = Vector3.Distance(cubePosition, b.transform.position);
             return distanceA.CompareTo(distanceB);
         });
-
-        // Ýlk iki en yakýn nesne hariç diðerlerinin collider'larýný kapat
         for (int i = 0; i < topObjects.Count; i++)
         {
             BoxCollider collider = topObjects[i].GetComponent<BoxCollider>();
             if (i < 1)
             {
-                collider.enabled = true; // En yakýn iki nesnenin collider'ýný açýk býrak
+                collider.enabled = true;
             }
             else
             {
-                collider.enabled = false; // Diðerlerinin collider'larýný kapat
+                collider.enabled = false;
             }
         }
     }
