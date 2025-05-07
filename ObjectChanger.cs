@@ -13,12 +13,9 @@ public class ObjectChanger : MonoBehaviour
 
     void Awake()
     {
-        // Her bileþene benzersiz anahtar:
         var comps = GetComponents<ObjectChanger>();
         int idx = System.Array.IndexOf(comps, this);
         restoreStateKey = $"{SceneManager.GetActiveScene().name}_{gameObject.name}_{idx}_State";
-
-        // "Yeni oyun" durumunda kendi anahtarýný temizle
         if (PlayerPrefs.GetInt("IsRestart", 0) == 0)
         {
             PlayerPrefs.DeleteKey(restoreStateKey);
@@ -29,8 +26,6 @@ public class ObjectChanger : MonoBehaviour
     void Start()
     {
         initialPosition = transform.position;
-
-        // SADECE baþlangýçta kapalý tut:
         targetObject.SetActive(false);
         targetObjectCopy.SetActive(true);
     }
@@ -42,7 +37,6 @@ public class ObjectChanger : MonoBehaviour
             Mathf.Abs(diff.y - targetDifference.y) < tolerance &&
             Mathf.Abs(diff.z - targetDifference.z) < tolerance)
         {
-            // Hedefe ulaþtý, görünürlüðü deðiþtir
             targetObject.SetActive(true);
             targetObjectCopy.SetActive(false);
         }
@@ -50,7 +44,6 @@ public class ObjectChanger : MonoBehaviour
 
     void OnDestroy()
     {
-        // Sahne kapanýrken veya restart tetiklenirken otomatik kaydet
         SaveTargetObjectState();
     }
 
@@ -60,8 +53,6 @@ public class ObjectChanger : MonoBehaviour
         PlayerPrefs.SetInt(restoreStateKey, isActive);
         PlayerPrefs.Save();
     }
-
-    // Restore butonuna basýldýðýnda bunu çaðýrýn:
     public void HandleRestore()
     {
         int saved = PlayerPrefs.GetInt(restoreStateKey, -1);
