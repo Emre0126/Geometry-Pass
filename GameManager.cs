@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     void LoadInterstitialAd()
     {
 #if UNITY_ANDROID
-        string adUnitId = "ca-app-pub-8869277409030391/6174358238"; // Gerçek Interstitial ID
+        string adUnitId = "ca-app-pub-8869277409030391/6174358238";
 #else
         string adUnitId = "unexpected_platform";
 #endif
@@ -115,12 +115,12 @@ public class GameManager : MonoBehaviour
             {
                 if (error != null || ad == null)
                 {
-                    Debug.LogError("Interstitial reklam yüklenemedi: " + error);
+                    
                     return;
                 }
 
                 interstitialAd = ad;
-                Debug.Log("Interstitial reklam yüklendi.");
+                
 
                 interstitialAd.OnAdFullScreenContentClosed += () =>
                 {
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
 
                 interstitialAd.OnAdFullScreenContentFailed += (AdError adError) =>
                 {
-                    Debug.Log("Interstitial reklam gösterilemedi: " + adError);
+                    
                     SceneManager.LoadScene(nextSceneName);
                 };
             });
@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Interstitial reklam hazýr deðil, sahneye geçiliyor.");
+            
             SceneManager.LoadScene(nextSceneName);
         }
     }
