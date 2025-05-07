@@ -2,20 +2,15 @@ using UnityEngine;
 
 public class ReStayButtonManager : MonoBehaviour
 {
-    public GameObject exitPanel; // Panel
-    public GameObject exitImage; // Image
-    public GameObject button1;   // Ýlk buton
-    public GameObject button2;   // Ýkinci buton
+    public GameObject exitPanel;
+    public GameObject exitImage;
+    public GameObject button1;
+    public GameObject button2;
 
     public void ShowExitUI()
     {
-        // Paneli görünür yap
         exitPanel.SetActive(false);
-
-        // Image'i görünür yap
         exitImage.SetActive(false);
-
-        // Butonlarý görünür yap
         button1.SetActive(false);
         button2.SetActive(false);
     }
