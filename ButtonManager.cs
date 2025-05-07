@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ButtonManager : MonoBehaviour
 {
-    public GameObject button1; // Ýlk buton
-    public GameObject button2; // Ýkinci buton
+    public GameObject button1;
+    public GameObject button2;
     public GameObject sphere;
     public GameObject Cube;
     public GameObject Cylinder;
@@ -13,7 +13,7 @@ public class ButtonManager : MonoBehaviour
     public GameObject target4;
     public void OnButtonClick()
     {
-        // Butonlarýn aktiflik durumunu false yap
+       
         if (button1 != null)
             button1.SetActive(false);
         if (sphere != null)
