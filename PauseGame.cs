@@ -13,16 +13,13 @@ public class PauseGame : MonoBehaviour
 
     private bool isPaused = false;
 
-    public AudioSource musicSource; // Müzik kaynaðý
-    public AudioSource[] soundSources; // Ses kaynaklarý dizisi
+    public AudioSource musicSource;
+    public AudioSource[] soundSources;
 
     void Start()
     {
-        // Baþlangýç ayarlarýný yükle
         isPaused = false;
         Time.timeScale = 1f;
-
-        // Tüm UI elemanlarýný baþlangýçta gizle
         pausePanel.SetActive(false);
         Resume.SetActive(false);
         MusicOn.SetActive(false);
@@ -31,32 +28,28 @@ public class PauseGame : MonoBehaviour
         Levels.SetActive(false);
         SoundOff.SetActive(false);
         SoundOn.SetActive(false);
-
-        // Müzik durumunu yükle ve ayarla
         if (PlayerPrefs.GetInt("MusicState", 1) == 1)
         {
             MusicOn.SetActive(false);
-            MusicOff.SetActive(false); // Ýlk durumda gizli kalacak
+            MusicOff.SetActive(false);
             musicSource.mute = false;
         }
         else
         {
             MusicOn.SetActive(false);
-            MusicOff.SetActive(false); // Ýlk durumda gizli kalacak
+            MusicOff.SetActive(false);
             musicSource.mute = true;
         }
-
-        // Ses durumu yükle ve ayarla
         if (PlayerPrefs.GetInt("SoundState", 1) == 1)
         {
             SoundOn.SetActive(false);
-            SoundOff.SetActive(false); // Ýlk durumda gizli kalacak
+            SoundOff.SetActive(false);
             SetAllSoundSourcesMute(false);
         }
         else
         {
             SoundOn.SetActive(false);
-            SoundOff.SetActive(false); // Ýlk durumda gizli kalacak
+            SoundOff.SetActive(false);
             SetAllSoundSourcesMute(true);
         }
     }
@@ -67,15 +60,12 @@ public class PauseGame : MonoBehaviour
 
         if (isPaused)
         {
-            // Oyunu durdur ve UI elemanlarýný göster
             Time.timeScale = 0f;
             pausePanel.SetActive(true);
             Resume.SetActive(true);
             exit.SetActive(true);
             Levels.SetActive(true);
             musicSource.Pause();
-
-            // Müzik durumu güncelle
             if (PlayerPrefs.GetInt("MusicState", 1) == 1)
             {
                 MusicOn.SetActive(true);
@@ -86,8 +76,6 @@ public class PauseGame : MonoBehaviour
                 MusicOn.SetActive(false);
                 MusicOff.SetActive(true);
             }
-
-            // Ses durumu güncelle
             if (PlayerPrefs.GetInt("SoundState", 1) == 1)
             {
                 SoundOn.SetActive(true);
@@ -101,7 +89,6 @@ public class PauseGame : MonoBehaviour
         }
         else
         {
-            // Oyunu devam ettir ve UI elemanlarýný gizle
             Time.timeScale = 1f;
             pausePanel.SetActive(false);
             Resume.SetActive(false);
@@ -114,7 +101,6 @@ public class PauseGame : MonoBehaviour
             musicSource.Play();
         }
     }
-
     public void ToggleMusic()
     {
         if (MusicOn.activeSelf)
@@ -122,17 +108,17 @@ public class PauseGame : MonoBehaviour
             MusicOn.SetActive(false);
             MusicOff.SetActive(true);
             musicSource.mute = true;
-            PlayerPrefs.SetInt("MusicState", 0); // Müzik kapalý olarak kaydet
+            PlayerPrefs.SetInt("MusicState", 0);
         }
         else if (MusicOff.activeSelf)
         {
             MusicOn.SetActive(true);
             MusicOff.SetActive(false);
             musicSource.mute = false;
-            PlayerPrefs.SetInt("MusicState", 1); // Müzik açýk olarak kaydet
+            PlayerPrefs.SetInt("MusicState", 1);
         }
 
-        PlayerPrefs.Save(); // Deðiþiklikleri kaydet
+        PlayerPrefs.Save();
     }
 
     public void ToggleSound()
@@ -142,17 +128,17 @@ public class PauseGame : MonoBehaviour
             SoundOn.SetActive(false);
             SoundOff.SetActive(true);
             SetAllSoundSourcesMute(true);
-            PlayerPrefs.SetInt("SoundState", 0); // Ses kapalý olarak kaydet
+            PlayerPrefs.SetInt("SoundState", 0);
         }
         else if (SoundOff.activeSelf)
         {
             SoundOn.SetActive(true);
             SoundOff.SetActive(false);
             SetAllSoundSourcesMute(false);
-            PlayerPrefs.SetInt("SoundState", 1); // Ses açýk olarak kaydet
+            PlayerPrefs.SetInt("SoundState", 1);
         }
 
-        PlayerPrefs.Save(); // Deðiþiklikleri kaydet
+        PlayerPrefs.Save();
     }
 
     private void SetAllSoundSourcesMute(bool mute)
