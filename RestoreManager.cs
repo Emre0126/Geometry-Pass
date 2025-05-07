@@ -24,8 +24,8 @@ public class RestoreManager : MonoBehaviour
     private bool wasCylinderKinematic = false, cylinderSnapshotLocked = false;
     private bool globalSnapshotLocked = false;
     private string restoreKey;
-    private string rewardedAdUnitId = "ca-app-pub-8869277409030391/9744580349"; // kendi ID'ni koy
-    private string interstitialAdUnitId = "ca-app-pub-8869277409030391/6174358238"; // kendi ID'ni koy
+    private string rewardedAdUnitId = "ca-app-pub-8869277409030391/9744580349";
+    private string interstitialAdUnitId = "ca-app-pub-8869277409030391/6174358238";
     [SerializeField] private TextMeshProUGUI popupText;
     private RewardedAd rewardedAd;
     private InterstitialAd interstitialAd;
@@ -35,7 +35,7 @@ public class RestoreManager : MonoBehaviour
     {
         restoreKey = SceneManager.GetActiveScene().name + "_RestoreAvailable";
 
-        PlayerPrefs.SetInt("RewardedAdLoaded", 0); // baþta reklam yüklenmedi say
+        PlayerPrefs.SetInt("RewardedAdLoaded", 0);
         PlayerPrefs.Save();
 
         MobileAds.Initialize(initStatus =>
@@ -68,7 +68,7 @@ public class RestoreManager : MonoBehaviour
         {
             if (PositionChanged(cube, cubeInitialPos) || PositionChanged(sphere, sphereInitialPos) || PositionChanged(cylinder, cylinderInitialPos))
             {
-                Debug.Log("Þekiller hareket etti, restore butonu gizlendi.");
+                
                 PlayerPrefs.DeleteKey(restoreKey);
                 PlayerPrefs.Save();
                 restoreButton?.gameObject.SetActive(false);
@@ -99,7 +99,7 @@ public class RestoreManager : MonoBehaviour
         if (kinematicTrueCount < 3 && !lockedSnapshotCaptured)
         {
             lockedSnapshotCaptured = true;
-            Debug.Log("Düþmeden önceki snapshot kilitlendi.");
+            
         }
     }
 
@@ -114,7 +114,7 @@ public class RestoreManager : MonoBehaviour
         cylinderPrevPos = cylinder.transform.position;
         cylinderPrevRot = cylinder.transform.rotation;
 
-        Debug.Log("Snapshot güncellendi.");
+        
     }
 
     private bool PositionChanged(GameObject obj, Vector3 originalPos)
@@ -141,7 +141,7 @@ public class RestoreManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Rewarded yüklenemedi: " + error?.GetMessage());
+                
                 PlayerPrefs.SetInt("RewardedAdLoaded", 0);
                 PlayerPrefs.Save();
             }
@@ -158,8 +158,8 @@ public class RestoreManager : MonoBehaviour
         if (adAlreadyShown) yield break;
 
         adAlreadyShown = true;
-        restoreButton.interactable = false; // Butonu devre dýþý býrak
-        ShowPopup("Loading ad, please wait..."); // Popup mesajý göster
+        restoreButton.interactable = false;
+        ShowPopup("Loading ad, please wait...");
 
         float timeout = 3f;
         float elapsed = 0f;
@@ -175,20 +175,20 @@ public class RestoreManager : MonoBehaviour
             yield return null;
         }
 
-        restoreButton.interactable = true; // Süre dolunca butonu tekrar aktif et
-        popupText.gameObject.SetActive(false); // Popup'ý gizle
+        restoreButton.interactable = true;
+        popupText.gameObject.SetActive(false);
 
         if (rewardedAd != null && rewardedAd.CanShowAd())
         {
             rewardedAd.Show(reward =>
             {
-                Debug.Log("Rewarded gösterildi, restore çalýþtýrýldý.");
+               
                 RestoreSavedPositions();
             });
         }
         else
         {
-            Debug.LogWarning("Rewarded çýkmadý, interstitial gösteriliyor.");
+            
             ShowInterstitialFallback();
         }
     }
@@ -202,16 +202,15 @@ public class RestoreManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Interstitial da hazýr deðil.");
+            
             ShowPopup("Ad is not ready. Please try again later.");
         }
     }
 
     private void HandleInterstitialClosedForRestore()
     {
-        Debug.Log("Interstitial kapandý, restore iþlemi çalýþtýrýlýyor.");
         RestoreSavedPositions();
-        interstitialAd.OnAdFullScreenContentClosed -= HandleInterstitialClosedForRestore; // dinlemeyi býrak
+        interstitialAd.OnAdFullScreenContentClosed -= HandleInterstitialClosedForRestore;
     }
 
     private void LoadInterstitialAd()
@@ -222,11 +221,11 @@ public class RestoreManager : MonoBehaviour
             if (error == null && ad != null)
             {
                 interstitialAd = ad;
-                Debug.Log("Interstitial yüklendi.");
+                
             }
             else
             {
-                Debug.LogWarning("Interstitial yüklenemedi: " + error?.GetMessage());
+                
             }
         });
     }
@@ -237,7 +236,7 @@ public class RestoreManager : MonoBehaviour
         {
             popupText.text = message;
             popupText.gameObject.SetActive(true);
-            StartCoroutine(HidePopupAfterDelay(5f)); // 2 saniye sonra gizle
+            StartCoroutine(HidePopupAfterDelay(5f));
         }
         else
         {
@@ -255,13 +254,13 @@ public class RestoreManager : MonoBehaviour
     }
     private void HandleAdClosed()
     {
-        Debug.Log("Reklam kapatýldý (ödül verilmeyebilir).");
+        
         LoadRewardedAd();
     }
 
     private void HandleAdFailedToShow(AdError error)
     {
-        Debug.LogError("Reklam gösterilemedi: " + error.GetMessage());
+        
         LoadRewardedAd();
     }
 
@@ -306,8 +305,6 @@ public class RestoreManager : MonoBehaviour
         PlayerPrefs.DeleteKey(restoreKey);
         PlayerPrefs.Save();
         restoreButton?.gameObject.SetActive(false);
-
-        Debug.Log("Restore iþlemi tamamlandý.");
     }
 
     private void LoadShape(string key, out Vector3 pos, out Quaternion rot)
